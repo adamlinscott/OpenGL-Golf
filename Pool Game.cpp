@@ -17,6 +17,7 @@ float gCuePowerMax = 0.75;
 float gCuePowerMin = 0.1;
 float gCueBallFactor = 8.0;
 bool gDoCue = true;
+int player = 1;
 
 //camera variables
 vec3 gCamPos(0.0,0.7,2.1);
@@ -186,9 +187,15 @@ void RenderScene(void) {
 		glBegin(GL_LINES);
 		float cuex = sin(gCueAngle) * gCuePower;
 		float cuez = cos(gCueAngle) * gCuePower;
-		glColor3f(1.0,0.0,0.0);
-		glVertex3f (gTable.balls[0].position(0), (BALL_RADIUS/2.0f), gTable.balls[0].position(1));
-		glVertex3f ((gTable.balls[0].position(0)+cuex), (BALL_RADIUS/2.0f), (gTable.balls[0].position(1)+cuez));
+		if (player == 0) {
+			glColor3f(1.0, 0.0, 0.0);
+		}
+		else
+		{
+			glColor3f(0.0, 0.0, 1.0);
+		}
+		glVertex3f (gTable.balls[player].position(0), (BALL_RADIUS/2.0f), gTable.balls[player].position(1));
+		glVertex3f ((gTable.balls[player].position(0)+cuex), (BALL_RADIUS/2.0f), (gTable.balls[player].position(1)+cuez));
 		glColor3f(1.0,1.0,1.0);
 		glEnd();
 	}
@@ -263,7 +270,14 @@ void KeyboardFunc(unsigned char key, int x, int y)
 			{
 				vec2 imp(	(-sin(gCueAngle) * gCuePower * gCueBallFactor),
 							(-cos(gCueAngle) * gCuePower * gCueBallFactor));
-				gTable.balls[0].ApplyImpulse(imp);				
+				gTable.balls[player].ApplyImpulse(imp);
+				if (player == 0) {
+					player = 1;
+				}
+				else
+				{
+					player = 0;
+				}
 			}
 			break;
 		}

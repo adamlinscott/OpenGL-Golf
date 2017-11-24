@@ -3,6 +3,7 @@
   -----------------------------------------------------------*/
 #include"stdafx.h"
 #include"simulation.h"
+#include <iostream>
 
 /*-----------------------------------------------------------
   macros
@@ -57,15 +58,21 @@ void ball::Reset(void)
 {
 	//set velocity to zero
 	velocity = 0.0;
-
+	std::cout << index;
 	//work out rack position
 	if(index==0)
 	{
-		position(1) = 0.5;
-		position(0) = 0.0;
+		position(1) = 1;
+		position(0) = 0.3;
 		return;
 	}
-	
+	else
+	{
+		position(1) = 1;
+		position(0) = -0.3;
+		return;
+	}
+/*
 	static const float sep = (BALL_RADIUS*3.0f);
 	static const float rowSep = (BALL_RADIUS*2.5f);
 	int row = 1;
@@ -76,7 +83,7 @@ void ball::Reset(void)
 		row++;
 	}
 	position(1) =  -(rowSep * (row-1));
-	position(0) = (((row-1)*sep)/2.0f) - (sep*(row-rowIndex));
+	position(0) = (((row-1)*sep)/2.0f) - (sep*(row-rowIndex));   */
 }
 
 void ball::ApplyImpulse(vec2 imp)
@@ -214,14 +221,9 @@ void table::SetupCushions(void)
 	cushions[2].vertices[0](0) = TABLE_X; 
 	cushions[2].vertices[0](1) = TABLE_Z; 
 	cushions[2].vertices[1](0) = TABLE_X; 
-	cushions[2].vertices[1](1) = -TABLE_Z; //+ 0.3; 
+	cushions[2].vertices[1](1) = -TABLE_Z; 
 
-//	cushions[3].vertices[0](0) = TABLE_X; 
-//	cushions[3].vertices[0](1) = -TABLE_Z + 0.3; 
-//	cushions[3].vertices[1](0) = TABLE_X - 0.3; 
-//	cushions[3].vertices[1](1) = -TABLE_Z; 
-
-	cushions[3].vertices[0](0) = TABLE_X; //- 0.3; 
+	cushions[3].vertices[0](0) = TABLE_X; 
 	cushions[3].vertices[0](1) = -TABLE_Z; 
 	cushions[3].vertices[1](0) = -TABLE_X; 
 	cushions[3].vertices[1](1) = -TABLE_Z; 
