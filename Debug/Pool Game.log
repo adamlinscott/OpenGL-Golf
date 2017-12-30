@@ -1,2 +1,3 @@
-﻿  Pool Game.cpp
-  Pool Game.vcxproj -> C:\Users\adaml\Documents\GitHub\OpenGL-Pool\Debug\Pool Game.exe
+﻿  simulation.cpp
+d:\desktop\opengl-pool\simulation.cpp(247): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  Pool Game.vcxproj -> D:\Desktop\OpenGL-Pool\Debug\Pool Game.exe

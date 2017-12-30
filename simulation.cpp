@@ -4,6 +4,7 @@
 #include"stdafx.h"
 #include"simulation.h"
 #include <iostream>
+#include <ctime>
 
 /*-----------------------------------------------------------
   macros
@@ -56,6 +57,7 @@ int ball::ballIndexCnt = 0;
 
 void ball::Reset(void)
 {
+	isInPlay = true;
 	//set velocity to zero
 	velocity = 0.0;
 	std::cout << index;
@@ -72,18 +74,6 @@ void ball::Reset(void)
 		position(0) = -0.3;
 		return;
 	}
-/*
-	static const float sep = (BALL_RADIUS*3.0f);
-	static const float rowSep = (BALL_RADIUS*2.5f);
-	int row = 1;
-	int rowIndex = index;
-	while(rowIndex > row)
-	{
-		rowIndex -= row;
-		row++;
-	}
-	position(1) =  -(rowSep * (row-1));
-	position(0) = (((row-1)*sep)/2.0f) - (sep*(row-rowIndex));   */
 }
 
 void ball::ApplyImpulse(vec2 imp)
@@ -115,6 +105,11 @@ void ball::DoBallCollision(ball &b)
 void ball::DoPlaneCollision(const cushion &b)
 {
 	if(HasHitPlane(b)) HitPlane(b);
+}
+
+void ball::DoHoleCollision(const hole &h)
+{
+	if (HasHitHole(h)) HitHole(h);
 }
 
 void ball::Update(int ms)
@@ -153,6 +148,15 @@ bool ball::HasHitBall(const ball &b) const
 	if(relVelocity.Dot(relPosnNorm) >= 0.0) return false;
 	//if distnce is more than sum of radii, have not hit
 	if(dist > (radius+b.radius)) return false;
+	return true;
+}
+
+bool ball::HasHitHole(const hole &h) const
+{
+	//if in front of plane, then have not hit
+	vec2 relPos = position - h.centre;
+	double dist = sqrt(relPos(0)*relPos(0) + (relPos(1)*relPos(1)));
+	if (dist > radius) return false;
 	return true;
 }
 
@@ -203,6 +207,13 @@ void ball::HitBall(ball &b)
 	b.velocity = parallelV2 + (relDir*perpVNew2);
 }
 
+void ball::HitHole(const hole &h)
+{
+	isInPlay = false;
+	velocity = { 0,0 };
+	position(0) = 10000;
+}
+
 /*-----------------------------------------------------------
   table class members
   -----------------------------------------------------------*/
@@ -233,6 +244,22 @@ void table::SetupCushions(void)
 		cushions[i].MakeCentre();
 		cushions[i].MakeNormal();
 	}
+	srand(time(NULL));
+
+	ResetTable();
+}
+
+
+void table::ResetTable(void)
+{
+	double x = rand();
+	double y = rand();
+
+	tHole.centre = { ((x / (RAND_MAX)) - 0.5) * ((TABLE_X-0.1) * 2), ((y / (RAND_MAX)) - 0.6) * ((TABLE_Z-0.2) * 2) };
+
+
+	for (int i = 0; i < NUM_BALLS; i++)
+		balls[i].Reset();
 }
 
 void table::Update(int ms)
@@ -249,6 +276,8 @@ void table::Update(int ms)
 		{
 			balls[i].DoBallCollision(balls[j]);
 		}
+
+		balls[i].DoHoleCollision(tHole);
 	}
 	
 	//update all balls

@@ -7,6 +7,8 @@
 #include<math.h>
 #include"simulation.h"
 
+const float M_PI = 3.14159265358979323846;  /* pi */
+
 //cue variables
 float gCueAngle = 0.0;
 float gCuePower = 0.25;
@@ -127,6 +129,18 @@ void DoCamera(int ms)
 }
 
 
+void drawBitmapText(char *string, float x, float y, float z)
+{
+	char *c;
+	glRasterPos3f(x, y, z);
+
+	for (c = string; *c != NULL; c++)
+	{
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *c);
+	}
+}
+
+
 void RenderScene(void) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -160,6 +174,18 @@ void RenderScene(void) {
 		glVertex3f (gTable.cushions[i].vertices[1](0), 0.0, gTable.cushions[i].vertices[1](1));
 		glEnd();
 	}
+
+	//Draw hole
+
+	glBegin(GL_LINE_LOOP);
+	for (int i = 0; i <= 300; i++) {
+		double angle = 2 * M_PI * i / 300;
+		double x = cos(angle)*0.1 * gTable.tHole.radius + gTable.tHole.centre(0);
+		double y = sin(angle)*0.1 * gTable.tHole.radius + gTable.tHole.centre(1);
+		glVertex3d(x, 0, y);
+	}
+	glEnd();
+
 	/*
 	glBegin(GL_LINE_LOOP);
 	glVertex3f (TABLE_X, 0.0, -TABLE_Z);
@@ -200,6 +226,18 @@ void RenderScene(void) {
 		glEnd();
 	}
 
+	//Draw Scores Text
+	char buffer[33]; 
+
+	glColor3f(1.0, 0, 0);
+	sprintf_s(buffer, "%d", gTable.balls[0].score);
+	drawBitmapText(buffer, 0.8, 0.7, 0);
+
+	glColor3f(0, 0.4, 1.0);
+	sprintf_s(buffer, "%d", gTable.balls[1].score);
+	drawBitmapText(buffer, -0.8, 0.7, 0);
+	glColor3f(1.0, 1.0, 1.0);
+	
 	//glPopMatrix();
 
 	glFlush();
@@ -268,17 +306,23 @@ void KeyboardFunc(unsigned char key, int x, int y)
 		{
 			if(gDoCue)
 			{
+				gTable.balls[player].score++;
 				vec2 imp(	(-sin(gCueAngle) * gCuePower * gCueBallFactor),
 							(-cos(gCueAngle) * gCuePower * gCueBallFactor));
 				gTable.balls[player].ApplyImpulse(imp);
 				if (player == 0) {
-					player = 1;
+					if (gTable.balls[1].isInPlay)
+						player = 1;
 				}
 				else
 				{
-					player = 0;
+					if (gTable.balls[0].isInPlay)
+						player = 0;
 				}
 			}
+
+			if (!gTable.balls[0].isInPlay && !gTable.balls[1].isInPlay)
+				gTable.ResetTable();
 			break;
 		}
 	case(27):
@@ -446,7 +490,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	glutInitWindowPosition(0,0);
 	glutInitWindowSize(1000,700);
 	//glutFullScreen();
-	glutCreateWindow("MSc Workshop : Pool Game");
+	glutCreateWindow("MSc Assignment : Golf Game");
 	#if DRAW_SOLID
 	InitLights();
 	#endif

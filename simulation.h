@@ -42,6 +42,16 @@ public:
 };
 
 /*-----------------------------------------------------------
+hole class
+-----------------------------------------------------------*/
+class hole
+{
+public:
+	vec2	centre;
+	float	radius = 1;
+};
+
+/*-----------------------------------------------------------
   ball class
   -----------------------------------------------------------*/
 
@@ -54,6 +64,8 @@ public:
 	float	radius;
 	float	mass;
 	int		index;
+	int score = 0;
+	bool isInPlay = true;
 
 	ball(): position(0.0), velocity(0.0), radius(BALL_RADIUS), 
 		mass(BALL_MASS) {index = ballIndexCnt++; Reset();}
@@ -61,15 +73,19 @@ public:
 	void Reset(void);
 	void ApplyImpulse(vec2 imp);
 	void ApplyFrictionForce(int ms);
+	void Update(int ms);
 	void DoPlaneCollision(const cushion &c);
 	void DoBallCollision(ball &b);
-	void Update(int ms);
+	void DoHoleCollision(const hole &h);
 	
 	bool HasHitPlane(const cushion &c) const;
 	bool HasHitBall(const ball &b) const;
+	bool HasHitHole(const hole &h) const;
 
 	void HitPlane(const cushion &c);
 	void HitBall(ball &b);
+	void HitHole(const hole &h);
+
 };
 
 /*-----------------------------------------------------------
@@ -83,6 +99,8 @@ public:
 	void SetupCushions(void);
 	void Update(int ms);	
 	bool AnyBallsMoving(void) const;
+	hole tHole;
+	void ResetTable(void);
 };
 
 /*-----------------------------------------------------------
