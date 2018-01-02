@@ -50,6 +50,11 @@ void cushion::MakeCentre(void)
 	centre/=2.0;
 }
 
+void cushion::MakeLength(void)
+{
+	length = sqrt((vertices[0](0) - vertices[0](1))*(vertices[0](0) - vertices[0](1)) + (vertices[1](0) - vertices[1](1))*(vertices[1](0) - vertices[1](1)));
+}
+
 /*-----------------------------------------------------------
   ball class members
   -----------------------------------------------------------*/
@@ -130,7 +135,20 @@ bool ball::HasHitPlane(const cushion &c) const
 	//if in front of plane, then have not hit
 	vec2 relPos = position - c.vertices[0];
 	double sep = relPos.Dot(c.normal);
-	if(sep > radius) return false;
+	bool isTop = c.vertices[0](1) > c.vertices[1](1);
+	bool isLeft = c.vertices[0](0) > c.vertices[1](0);
+
+	if (isTop && position(1) > c.vertices[0](1) + radius) return false;
+	if (!isTop && position(1) > c.vertices[1](1) + radius) return false;
+	if (isTop && position(1) < c.vertices[1](1) - radius) return false;
+	if (!isTop && position(1) < c.vertices[0](1) - radius) return false;
+
+	if (isLeft && position(0) > c.vertices[0](0) + radius) return false;
+	if (!isLeft && position(0) > c.vertices[1](0) + radius) return false;
+	if (isLeft && position(0) < c.vertices[1](0) - radius) return false;
+	if (!isLeft && position(0) < c.vertices[0](0) - radius) return false;
+
+	if(sep > radius ) return false;
 	return true;
 }
 
@@ -243,6 +261,7 @@ void table::SetupCushions(void)
 	{
 		cushions[i].MakeCentre();
 		cushions[i].MakeNormal();
+		cushions[i].MakeLength();
 	}
 	srand(time(NULL));
 

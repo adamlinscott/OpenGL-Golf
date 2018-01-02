@@ -36,9 +36,11 @@ public:
 	vec2	vertices[2]; //2d
 	vec2	centre;
 	vec2	normal;
+	int		length;
 
 	void MakeNormal(void);
 	void MakeCentre(void);
+	void MakeLength(void);
 };
 
 /*-----------------------------------------------------------
