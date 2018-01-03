@@ -68,18 +68,13 @@ void ball::Reset(void)
 	velocity = 0.0;
 	std::cout << index;
 	//work out rack position
-	if(index==0)
-	{
-		position(1) = 1;
-		position(0) = 0.3;
-		return;
-	}
-	else
-	{
-		position(1) = 1;
-		position(0) = -0.3;
-		return;
-	}
+	
+	isGhost = true;
+
+	position(1) = 1;
+	position(0) = 0;
+	return;
+	
 }
 
 void ball::ApplyImpulse(vec2 imp)
@@ -155,6 +150,7 @@ bool ball::HasHitPlane(const cushion &c) const
 
 bool ball::HasHitBall(const ball &b) const
 {
+	if (isGhost || b.isGhost || !isInPlay || !b.isInPlay) return false;
 	//work out relative position of ball from other ball,
 	//distance between balls
 	//and relative velocity

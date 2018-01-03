@@ -20,7 +20,7 @@ float gCuePowerMax = 0.75;
 float gCuePowerMin = 0.1;
 float gCueBallFactor = 8.0;
 bool gDoCue = true;
-int player = 1;
+int player = 0;
 
 //camera variables
 vec3 gCamPos(0.0,0.7,2.1);
@@ -171,7 +171,20 @@ void RenderScene(void) {
 		{
 			glPushMatrix();
 			glTranslatef(gTable.balls[i].position(0), (BALL_RADIUS / 2.0), gTable.balls[i].position(1));
-			if(i==0) glColor3f(1.0, 0.0, 0.0);
+
+			int rat = i / 3 + 1;
+			if (i % 3 == 0) {
+				glColor3f(1.0 / rat, 0.0, 0.0);
+			}
+			else if (i % 3 == 1)
+			{
+				glColor3f(0.0, 0.0, 1.0 / rat);
+			}
+			else
+			{
+				glColor3f(0.0, 1.0 / rat, 0.0);
+			}
+
 #if DRAW_SOLID
 			glutSolidSphere(gTable.balls[i].radius, 32, 32);
 #else
@@ -211,26 +224,6 @@ void RenderScene(void) {
 			glColor3f(1.0, 1.0, 1.0);
 		}
 
-		/*
-		glBegin(GL_LINE_LOOP);
-		glVertex3f (TABLE_X, 0.0, -TABLE_Z);
-		glVertex3f (TABLE_X, 0.1, -TABLE_Z);
-		glVertex3f (TABLE_X, 0.1, TABLE_Z);
-		glVertex3f (TABLE_X, 0.0, TABLE_Z);
-		glEnd();
-		glBegin(GL_LINE_LOOP);
-		glVertex3f (TABLE_X, 0.0, -TABLE_Z);
-		glVertex3f (TABLE_X, 0.1, -TABLE_Z);
-		glVertex3f (-TABLE_X, 0.1, -TABLE_Z);
-		glVertex3f (-TABLE_X, 0.0, -TABLE_Z);
-		glEnd();
-		glBegin(GL_LINE_LOOP);
-		glVertex3f (TABLE_X, 0.0, TABLE_Z);
-		glVertex3f (TABLE_X, 0.1, TABLE_Z);
-		glVertex3f (-TABLE_X, 0.1, TABLE_Z);
-		glVertex3f (-TABLE_X, 0.0, TABLE_Z);
-		glEnd();
-		*/
 
 		//draw the cue
 		if (gDoCue)
@@ -238,12 +231,17 @@ void RenderScene(void) {
 			glBegin(GL_LINES);
 			float cuex = sin(gCueAngle) * gCuePower;
 			float cuez = cos(gCueAngle) * gCuePower;
-			if (player == 0) {
-				glColor3f(1.0, 0.0, 0.0);
+			int rat = player / 3 + 1;
+			if (player % 3 == 0) {
+				glColor3f(1.0/rat, 0.0, 0.0);
+			}
+			else if(player % 3 == 1)
+			{
+				glColor3f(0.0, 0.0, 1.0/rat);
 			}
 			else
 			{
-				glColor3f(0.0, 0.0, 1.0);
+				glColor3f(0.0, 1.0/rat, 0.0);
 			}
 			glVertex3f(gTable.balls[player].position(0), (BALL_RADIUS / 2.0f), gTable.balls[player].position(1));
 			glVertex3f((gTable.balls[player].position(0) + cuex), (BALL_RADIUS / 2.0f), (gTable.balls[player].position(1) + cuez));
@@ -254,17 +252,17 @@ void RenderScene(void) {
 		//Draw Scores Text
 		char buffer[33];
 
-		glColor3f(1.0, 0, 0);
-		sprintf_s(buffer, "%d", gTable.balls[0].score);
-		drawBitmapText(buffer, 0.8, 0.7, 0);
-
-		glColor3f(0, 0.4, 1.0);
-		sprintf_s(buffer, "%d", gTable.balls[1].score);
+		sprintf_s(buffer, "Hole #%d", gTable.holeNo);
 		drawBitmapText(buffer, -0.8, 0.7, 0);
+
+		//glColor3f(1.0, 0, 0);
+		sprintf_s(buffer, "Player %d: %d", player + 1, gTable.balls[player].score);
+		drawBitmapText(buffer, 0.8, 0.7, 0);
+		sprintf_s(buffer, "Player %d: %d", (player + 1)%(NUM_BALLS) + 1, gTable.balls[(player+1)%NUM_BALLS].score);
+		drawBitmapText(buffer, 0.8, 0.6, 0);
+
 		glColor3f(1.0, 1.0, 1.0);
 
-		sprintf_s(buffer, "Hole #%d", gTable.holeNo);
-		drawBitmapText(buffer, 0, 0.7, 0);
 
 		//glPopMatrix();
 	}
@@ -342,21 +340,19 @@ void KeyboardFunc(unsigned char key, int x, int y)
 			if(gDoCue)
 			{
 				gTable.balls[player].score++;
+				gTable.balls[player].isGhost = false;
 				vec2 imp(	(-sin(gCueAngle) * gCuePower * gCueBallFactor),
 							(-cos(gCueAngle) * gCuePower * gCueBallFactor));
 				gTable.balls[player].ApplyImpulse(imp);
-				if (player == 0) {
-					if (gTable.balls[1].isInPlay)
-						player = 1;
-				}
-				else
-				{
-					if (gTable.balls[0].isInPlay)
-						player = 0;
-				}
+				player++;
 			}
 
-			if (!gTable.balls[0].isInPlay && !gTable.balls[1].isInPlay)
+			bool isAnyballInPlay = false;
+			for (int i = 0; i < NUM_BALLS; i++)
+				if (gTable.balls[i].isInPlay)
+					isAnyballInPlay = true;
+
+			if (!isAnyballInPlay)
 			{
 				gTable.holeNo++;
 				if (gTable.holeNo > 9)
@@ -500,13 +496,15 @@ void UpdateScene(int ms)
 	else gDoCue = false;
 
 
-	if (player == 0) {
-		if (!gTable.balls[0].isInPlay)
-			player = 1;
-	}
-	else
+	bool isAnyballInPlay = false;
+	for (int i = 0; i < NUM_BALLS; i++)
+		if (gTable.balls[i].isInPlay)
+			isAnyballInPlay = true;
+
+	if (!gTable.balls[player].isInPlay && isAnyballInPlay)
 	{
-		if (!gTable.balls[1].isInPlay)
+		player++;
+		if (player >= NUM_BALLS)
 			player = 0;
 	}
 
