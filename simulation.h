@@ -2,19 +2,22 @@
   Simulation Header File
   -----------------------------------------------------------*/
 #include"vecmath.h"
+#include <time.h>
 
 /*-----------------------------------------------------------
   Macros
   -----------------------------------------------------------*/
 #define TABLE_X			(0.6f) 
 #define TABLE_Z			(1.2f)
+#define TABLE_UNIT		(0.6f)
 #define TABLE_Y			(0.1f)
+#define TABLE_OB		(100.0f)
 #define BALL_RADIUS		(0.05f)
 #define BALL_MASS		(0.1f)
 #define TWO_PI			(6.2832f)
 #define	SIM_UPDATE_MS	(10)
 #define NUM_BALLS		(2)		
-#define NUM_CUSHIONS	(4)		
+#define NUM_CUSHIONS	(8)		
 
 /*-----------------------------------------------------------
   plane normals
@@ -97,7 +100,7 @@ class table
 {
 public:
 	ball balls[NUM_BALLS];	
-	cushion cushions[NUM_CUSHIONS];	
+	cushion cushions[NUM_CUSHIONS];
 	void SetupCushions(void);
 	void Update(int ms);	
 	bool AnyBallsMoving(void) const;
@@ -109,3 +112,31 @@ public:
   global table
   -----------------------------------------------------------*/
 extern table gTable;
+
+
+
+/*-----------------------------------------------------------
+menu class
+-----------------------------------------------------------*/
+class menu
+{
+public:
+	int menuSelection = 1;
+	int menuSelectionMin = 1;
+	int menuSelectionMax = 3;
+	time_t menuUpdateRate = 250;
+	time_t menuUpdateTimer = 0;
+	time_t lastTimeCheck;
+	bool drawMenu = true;
+
+	time_t getDeltaTime()
+	{
+		time_t diff = clock() - lastTimeCheck;
+		lastTimeCheck = clock();
+		return diff;
+	}
+};
+/*-----------------------------------------------------------
+global table
+-----------------------------------------------------------*/
+extern menu gMenu;

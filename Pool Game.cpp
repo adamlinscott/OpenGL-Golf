@@ -6,6 +6,7 @@
 #include<glut.h>
 #include<math.h>
 #include"simulation.h"
+#include <time.h>
 
 const float M_PI = 3.14159265358979323846;  /* pi */
 
@@ -146,99 +147,117 @@ void RenderScene(void) {
 
 	//set camera
 	glLoadIdentity();
-	gluLookAt(gCamPos(0),gCamPos(1),gCamPos(2),gCamLookAt(0),gCamLookAt(1),gCamLookAt(2),0.0f,1.0f,0.0f);
-
-	//draw the ball
-	glColor3f(1.0,1.0,1.0);
-	for(int i=0;i<NUM_BALLS;i++)
+	gluLookAt(gCamPos(0), gCamPos(1), gCamPos(2), gCamLookAt(0), gCamLookAt(1), gCamLookAt(2), 0.0f, 1.0f, 0.0f);
+	
+	if (gMenu.drawMenu)
 	{
-		glPushMatrix();
-		glTranslatef(gTable.balls[i].position(0),(BALL_RADIUS/2.0),gTable.balls[i].position(1));
-		#if DRAW_SOLID
-		glutSolidSphere(gTable.balls[i].radius,32,32);
-		#else
-		glutWireSphere(gTable.balls[i].radius,12,12);
-		#endif
-		glPopMatrix();
-		glColor3f(0.0,0.0,1.0);
+		if(gMenu.menuSelection == 1) glColor3f(1.0, 0, 0);
+		drawBitmapText("Course #1", -1, 0, 0);
+		glColor3f(1.0, 1.0, 1.0);
+
+		if (gMenu.menuSelection == 2) glColor3f(1.0, 0, 0);
+		drawBitmapText("Course #2", -0.2, 0, 0);
+		glColor3f(1.0, 1.0, 1.0);
+
+		if (gMenu.menuSelection == 3) glColor3f(1.0, 0, 0);
+		drawBitmapText("Course #3", 0.6, 0, 0);
+		glColor3f(1.0, 1.0, 1.0);
 	}
-	glColor3f(1.0,1.0,1.0);
-
-	//draw the table
-	for(int i=0;i<NUM_CUSHIONS;i++)
-	{	
-		glBegin(GL_LINE_LOOP);
-		glVertex3f (gTable.cushions[i].vertices[0](0), 0.0, gTable.cushions[i].vertices[0](1));
-		glVertex3f (gTable.cushions[i].vertices[0](0), 0.1, gTable.cushions[i].vertices[0](1));
-		glVertex3f (gTable.cushions[i].vertices[1](0), 0.1, gTable.cushions[i].vertices[1](1));
-		glVertex3f (gTable.cushions[i].vertices[1](0), 0.0, gTable.cushions[i].vertices[1](1));
-		glEnd();
-	}
-
-	//Draw hole
-
-	glBegin(GL_LINE_LOOP);
-	for (int i = 0; i <= 300; i++) {
-		double angle = 2 * M_PI * i / 300;
-		double x = cos(angle)*0.1 * gTable.tHole.radius + gTable.tHole.centre(0);
-		double y = sin(angle)*0.1 * gTable.tHole.radius + gTable.tHole.centre(1);
-		glVertex3d(x, 0, y);
-	}
-	glEnd();
-
-	/*
-	glBegin(GL_LINE_LOOP);
-	glVertex3f (TABLE_X, 0.0, -TABLE_Z);
-	glVertex3f (TABLE_X, 0.1, -TABLE_Z);
-	glVertex3f (TABLE_X, 0.1, TABLE_Z);
-	glVertex3f (TABLE_X, 0.0, TABLE_Z);
-	glEnd();
-	glBegin(GL_LINE_LOOP);
-	glVertex3f (TABLE_X, 0.0, -TABLE_Z);
-	glVertex3f (TABLE_X, 0.1, -TABLE_Z);
-	glVertex3f (-TABLE_X, 0.1, -TABLE_Z);
-	glVertex3f (-TABLE_X, 0.0, -TABLE_Z);
-	glEnd();
-	glBegin(GL_LINE_LOOP);
-	glVertex3f (TABLE_X, 0.0, TABLE_Z);
-	glVertex3f (TABLE_X, 0.1, TABLE_Z);
-	glVertex3f (-TABLE_X, 0.1, TABLE_Z);
-	glVertex3f (-TABLE_X, 0.0, TABLE_Z);
-	glEnd();
-	*/
-
-	//draw the cue
-	if(gDoCue)
+	else 
 	{
-		glBegin(GL_LINES);
-		float cuex = sin(gCueAngle) * gCuePower;
-		float cuez = cos(gCueAngle) * gCuePower;
-		if (player == 0) {
-			glColor3f(1.0, 0.0, 0.0);
-		}
-		else
+		//draw the ball
+		glColor3f(1.0, 1.0, 1.0);
+		for (int i = 0; i < NUM_BALLS; i++)
 		{
+			glPushMatrix();
+			glTranslatef(gTable.balls[i].position(0), (BALL_RADIUS / 2.0), gTable.balls[i].position(1));
+			if(i==0) glColor3f(1.0, 0.0, 0.0);
+#if DRAW_SOLID
+			glutSolidSphere(gTable.balls[i].radius, 32, 32);
+#else
+			glutWireSphere(gTable.balls[i].radius, 12, 12);
+#endif
+			glPopMatrix();
 			glColor3f(0.0, 0.0, 1.0);
 		}
-		glVertex3f (gTable.balls[player].position(0), (BALL_RADIUS/2.0f), gTable.balls[player].position(1));
-		glVertex3f ((gTable.balls[player].position(0)+cuex), (BALL_RADIUS/2.0f), (gTable.balls[player].position(1)+cuez));
-		glColor3f(1.0,1.0,1.0);
+		glColor3f(1.0, 1.0, 1.0);
+
+		//draw the table
+		for (int i = 0; i < NUM_CUSHIONS; i++)
+		{
+			glBegin(GL_LINE_LOOP);
+			glVertex3f(gTable.cushions[i].vertices[0](0), 0.0, gTable.cushions[i].vertices[0](1));
+			glVertex3f(gTable.cushions[i].vertices[0](0), 0.1, gTable.cushions[i].vertices[0](1));
+			glVertex3f(gTable.cushions[i].vertices[1](0), 0.1, gTable.cushions[i].vertices[1](1));
+			glVertex3f(gTable.cushions[i].vertices[1](0), 0.0, gTable.cushions[i].vertices[1](1));
+			glEnd();
+		}
+
+		//Draw hole
+
+		glBegin(GL_LINE_LOOP);
+		for (int i = 0; i <= 300; i++) {
+			double angle = 2 * M_PI * i / 300;
+			double x = cos(angle)*0.1 * gTable.tHole.radius + gTable.tHole.centre(0);
+			double y = sin(angle)*0.1 * gTable.tHole.radius + gTable.tHole.centre(1);
+			glVertex3d(x, 0, y);
+		}
 		glEnd();
+
+		/*
+		glBegin(GL_LINE_LOOP);
+		glVertex3f (TABLE_X, 0.0, -TABLE_Z);
+		glVertex3f (TABLE_X, 0.1, -TABLE_Z);
+		glVertex3f (TABLE_X, 0.1, TABLE_Z);
+		glVertex3f (TABLE_X, 0.0, TABLE_Z);
+		glEnd();
+		glBegin(GL_LINE_LOOP);
+		glVertex3f (TABLE_X, 0.0, -TABLE_Z);
+		glVertex3f (TABLE_X, 0.1, -TABLE_Z);
+		glVertex3f (-TABLE_X, 0.1, -TABLE_Z);
+		glVertex3f (-TABLE_X, 0.0, -TABLE_Z);
+		glEnd();
+		glBegin(GL_LINE_LOOP);
+		glVertex3f (TABLE_X, 0.0, TABLE_Z);
+		glVertex3f (TABLE_X, 0.1, TABLE_Z);
+		glVertex3f (-TABLE_X, 0.1, TABLE_Z);
+		glVertex3f (-TABLE_X, 0.0, TABLE_Z);
+		glEnd();
+		*/
+
+		//draw the cue
+		if (gDoCue)
+		{
+			glBegin(GL_LINES);
+			float cuex = sin(gCueAngle) * gCuePower;
+			float cuez = cos(gCueAngle) * gCuePower;
+			if (player == 0) {
+				glColor3f(1.0, 0.0, 0.0);
+			}
+			else
+			{
+				glColor3f(0.0, 0.0, 1.0);
+			}
+			glVertex3f(gTable.balls[player].position(0), (BALL_RADIUS / 2.0f), gTable.balls[player].position(1));
+			glVertex3f((gTable.balls[player].position(0) + cuex), (BALL_RADIUS / 2.0f), (gTable.balls[player].position(1) + cuez));
+			glColor3f(1.0, 1.0, 1.0);
+			glEnd();
+		}
+
+		//Draw Scores Text
+		char buffer[33];
+
+		glColor3f(1.0, 0, 0);
+		sprintf_s(buffer, "%d", gTable.balls[0].score);
+		drawBitmapText(buffer, 0.8, 0.7, 0);
+
+		glColor3f(0, 0.4, 1.0);
+		sprintf_s(buffer, "%d", gTable.balls[1].score);
+		drawBitmapText(buffer, -0.8, 0.7, 0);
+		glColor3f(1.0, 1.0, 1.0);
+
+		//glPopMatrix();
 	}
-
-	//Draw Scores Text
-	char buffer[33]; 
-
-	glColor3f(1.0, 0, 0);
-	sprintf_s(buffer, "%d", gTable.balls[0].score);
-	drawBitmapText(buffer, 0.8, 0.7, 0);
-
-	glColor3f(0, 0.4, 1.0);
-	sprintf_s(buffer, "%d", gTable.balls[1].score);
-	drawBitmapText(buffer, -0.8, 0.7, 0);
-	glColor3f(1.0, 1.0, 1.0);
-	
-	//glPopMatrix();
 
 	glFlush();
 	glutSwapBuffers();
@@ -304,6 +323,12 @@ void KeyboardFunc(unsigned char key, int x, int y)
 	{
 	case(13):
 		{
+			if (gMenu.drawMenu)
+			{
+				gMenu.drawMenu = false;
+				gTable.SetupCushions();
+				break;
+			}
 			if(gDoCue)
 			{
 				gTable.balls[player].score++;
@@ -440,13 +465,13 @@ void InitLights(void)
 	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
 	GLfloat mat_shininess[] = { 50.0 };
 	GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 };
-	glClearColor (0.0, 0.0, 0.0, 0.0);
+	glClearColor (0.0, 0.3, 0.0, 1.0);
 	glShadeModel (GL_SMOOTH);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
 	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
 	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
-	GLfloat light_ambient[] = { 2.0, 2.0, 2.0, 1.0 };
+	GLfloat light_ambient[] = { 0.2, 0.2, 0.2, 1.0 };
 	glLightfv(GL_LIGHT1, GL_AMBIENT, light_ambient);
 
 	glEnable(GL_LIGHTING);
@@ -454,7 +479,6 @@ void InitLights(void)
 	glEnable(GL_LIGHT1);
 	glEnable(GL_DEPTH_TEST);
 }
-
 void UpdateScene(int ms) 
 {
 	if(gTable.AnyBallsMoving()==false) gDoCue = true;
@@ -467,10 +491,30 @@ void UpdateScene(int ms)
 		if (gCueAngle <0.0) gCueAngle += TWO_PI;
 		if (gCueAngle >TWO_PI) gCueAngle -= TWO_PI;
 
-		if(gCueControl[2]) gCuePower += ((gCuePowerSpeed * ms)/1000);
-		if(gCueControl[3]) gCuePower -= ((gCuePowerSpeed * ms)/1000);
+		gMenu.menuUpdateTimer += gMenu.getDeltaTime();
+
+		if (gCueControl[2])
+		{
+			gCuePower += ((gCuePowerSpeed * ms) / 1000);
+			if (gMenu.menuUpdateTimer > gMenu.menuUpdateRate && gMenu.drawMenu)
+			{
+				gMenu.menuUpdateTimer = 0;
+				gMenu.menuSelection++;
+			}
+		}
+		if (gCueControl[3])
+		{
+			gCuePower -= ((gCuePowerSpeed * ms) / 1000);
+			if (gMenu.menuUpdateTimer > gMenu.menuUpdateRate && gMenu.drawMenu)
+			{
+				gMenu.menuUpdateTimer = 0;
+				gMenu.menuSelection--;
+			}
+		}
 		if(gCuePower > gCuePowerMax) gCuePower = gCuePowerMax;
 		if(gCuePower < gCuePowerMin) gCuePower = gCuePowerMin;
+		if (gMenu.menuSelection > gMenu.menuSelectionMax) gMenu.menuSelection = gMenu.menuSelectionMax;
+		if (gMenu.menuSelection < gMenu.menuSelectionMin) gMenu.menuSelection = gMenu.menuSelectionMin;
 	}
 
 	DoCamera(ms);
@@ -484,6 +528,8 @@ void UpdateScene(int ms)
 int _tmain(int argc, _TCHAR* argv[])
 {
 	gTable.SetupCushions();
+
+	gMenu.lastTimeCheck = clock();
 
 	glutInit(&argc, ((char **)argv));
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE| GLUT_RGBA);

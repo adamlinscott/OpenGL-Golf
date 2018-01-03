@@ -22,6 +22,7 @@ vec2	gPlaneNormal_Bottom(0.0,-1.0);
 */
 
 table gTable;
+menu gMenu;
 
 static const float gRackPositionX[] = {0.0f,0.0f,(BALL_RADIUS*2.0f),(-BALL_RADIUS*2.0f),(BALL_RADIUS*4.0f)}; 
 static const float gRackPositionZ[] = {0.5f,0.0f,(-BALL_RADIUS*3.0f),(-BALL_RADIUS*3.0f)}; 
@@ -237,25 +238,93 @@ void ball::HitHole(const hole &h)
   -----------------------------------------------------------*/
 void table::SetupCushions(void)
 {
-	cushions[0].vertices[0](0) = -TABLE_X; 
-	cushions[0].vertices[0](1) = -TABLE_Z; 
-	cushions[0].vertices[1](0) = -TABLE_X; 
-	cushions[0].vertices[1](1) = TABLE_Z; 
+	printf_s("%d", gMenu.menuSelection);
+	if (gMenu.menuSelection == 1) 
+	{
+		cushions[0].vertices[0](0) = -TABLE_UNIT;
+		cushions[0].vertices[0](1) = -TABLE_UNIT*2;
+		cushions[0].vertices[1](0) = -TABLE_UNIT;
+		cushions[0].vertices[1](1) = TABLE_UNIT*2;
 
-	cushions[1].vertices[0](0) = -TABLE_X; 
-	cushions[1].vertices[0](1) = TABLE_Z; 
-	cushions[1].vertices[1](0) = TABLE_X; 
-	cushions[1].vertices[1](1) = TABLE_Z; 
+		cushions[1].vertices[0](0) = -TABLE_UNIT;
+		cushions[1].vertices[0](1) = TABLE_UNIT*2;
+		cushions[1].vertices[1](0) = TABLE_UNIT;
+		cushions[1].vertices[1](1) = TABLE_UNIT*2;
 
-	cushions[2].vertices[0](0) = TABLE_X; 
-	cushions[2].vertices[0](1) = TABLE_Z; 
-	cushions[2].vertices[1](0) = TABLE_X; 
-	cushions[2].vertices[1](1) = -TABLE_Z; 
+		cushions[2].vertices[0](0) = TABLE_UNIT;
+		cushions[2].vertices[0](1) = TABLE_UNIT*2;
+		cushions[2].vertices[1](0) = TABLE_UNIT;
+		cushions[2].vertices[1](1) = -TABLE_UNIT*2;
 
-	cushions[3].vertices[0](0) = TABLE_X; 
-	cushions[3].vertices[0](1) = -TABLE_Z; 
-	cushions[3].vertices[1](0) = -TABLE_X; 
-	cushions[3].vertices[1](1) = -TABLE_Z; 
+		cushions[3].vertices[0](0) = TABLE_UNIT;
+		cushions[3].vertices[0](1) = -TABLE_UNIT*2;
+		cushions[3].vertices[1](0) = -TABLE_UNIT;
+		cushions[3].vertices[1](1) = -TABLE_UNIT*2;
+
+		cushions[4].vertices[0](0) = TABLE_OB;
+		cushions[4].vertices[0](1) = TABLE_OB;
+		cushions[4].vertices[1](0) = TABLE_OB;
+		cushions[4].vertices[1](1) = TABLE_OB;
+
+		cushions[5].vertices[0](0) = TABLE_OB;
+		cushions[5].vertices[0](1) = TABLE_OB;
+		cushions[5].vertices[1](0) = TABLE_OB;
+		cushions[5].vertices[1](1) = TABLE_OB;
+
+		cushions[6].vertices[0](0) = TABLE_OB;
+		cushions[6].vertices[0](1) = TABLE_OB;
+		cushions[6].vertices[1](0) = TABLE_OB;
+		cushions[6].vertices[1](1) = TABLE_OB;
+
+		cushions[7].vertices[0](0) = TABLE_OB;
+		cushions[7].vertices[0](1) = TABLE_OB;
+		cushions[7].vertices[1](0) = TABLE_OB;
+		cushions[7].vertices[1](1) = TABLE_OB;
+	}
+
+
+	if (gMenu.menuSelection == 2)
+	{
+		cushions[0].vertices[0](0) = -TABLE_UNIT;
+		cushions[0].vertices[0](1) = 0;
+		cushions[0].vertices[1](0) = -TABLE_UNIT;
+		cushions[0].vertices[1](1) = TABLE_UNIT * 2;
+
+		cushions[1].vertices[0](0) = -TABLE_UNIT;
+		cushions[1].vertices[0](1) = TABLE_UNIT * 2;
+		cushions[1].vertices[1](0) = TABLE_UNIT;
+		cushions[1].vertices[1](1) = TABLE_UNIT * 2;
+
+		cushions[2].vertices[0](0) = TABLE_UNIT;
+		cushions[2].vertices[0](1) = TABLE_UNIT * 2;
+		cushions[2].vertices[1](0) = TABLE_UNIT;
+		cushions[2].vertices[1](1) = -TABLE_UNIT * 2;
+
+		cushions[3].vertices[0](0) = TABLE_UNIT;
+		cushions[3].vertices[0](1) = -TABLE_UNIT * 2;
+		cushions[3].vertices[1](0) = -TABLE_UNIT * 3;
+		cushions[3].vertices[1](1) = -TABLE_UNIT * 2;
+
+		cushions[4].vertices[1](0) = -TABLE_UNIT * 3;
+		cushions[4].vertices[1](1) = 0;
+		cushions[4].vertices[0](0) = -TABLE_UNIT * 3;
+		cushions[4].vertices[0](1) = -TABLE_UNIT * 2;
+
+		cushions[5].vertices[0](0) = -TABLE_UNIT * 3;
+		cushions[5].vertices[0](1) = 0;
+		cushions[5].vertices[1](0) = -TABLE_UNIT;
+		cushions[5].vertices[1](1) = 0;
+
+		cushions[6].vertices[0](0) = TABLE_OB;
+		cushions[6].vertices[0](1) = TABLE_OB;
+		cushions[6].vertices[1](0) = TABLE_OB;
+		cushions[6].vertices[1](1) = TABLE_OB;
+
+		cushions[7].vertices[0](0) = TABLE_OB;
+		cushions[7].vertices[0](1) = TABLE_OB;
+		cushions[7].vertices[1](0) = TABLE_OB;
+		cushions[7].vertices[1](1) = TABLE_OB;
+	}
 
 	for(int i=0;i<NUM_CUSHIONS;i++)
 	{
