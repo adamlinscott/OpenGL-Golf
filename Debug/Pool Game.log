@@ -1,4 +1,4 @@
 ﻿  simulation.cpp
 d:\desktop\opengl-pool\simulation.cpp(56): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-d:\desktop\opengl-pool\simulation.cpp(335): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+d:\desktop\opengl-pool\simulation.cpp(377): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   Pool Game.vcxproj -> D:\Desktop\OpenGL-Pool\Debug\Pool Game.exe

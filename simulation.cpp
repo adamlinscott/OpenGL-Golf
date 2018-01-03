@@ -282,7 +282,6 @@ void table::SetupCushions(void)
 		cushions[7].vertices[1](1) = TABLE_OB;
 	}
 
-
 	if (gMenu.menuSelection == 2)
 	{
 		cushions[0].vertices[0](0) = -TABLE_UNIT;
@@ -324,6 +323,49 @@ void table::SetupCushions(void)
 		cushions[7].vertices[0](1) = TABLE_OB;
 		cushions[7].vertices[1](0) = TABLE_OB;
 		cushions[7].vertices[1](1) = TABLE_OB;
+	}
+
+	if (gMenu.menuSelection == 3)
+	{
+		cushions[0].vertices[0](0) = -TABLE_UNIT;
+		cushions[0].vertices[0](1) = 0;
+		cushions[0].vertices[1](0) = -TABLE_UNIT;
+		cushions[0].vertices[1](1) = TABLE_UNIT * 2;
+
+		cushions[1].vertices[0](0) = -TABLE_UNIT;
+		cushions[1].vertices[0](1) = TABLE_UNIT * 2;
+		cushions[1].vertices[1](0) = TABLE_UNIT;
+		cushions[1].vertices[1](1) = TABLE_UNIT * 2;
+
+		cushions[2].vertices[0](0) = TABLE_UNIT;
+		cushions[2].vertices[0](1) = TABLE_UNIT * 2;
+		cushions[2].vertices[1](0) = TABLE_UNIT;
+		cushions[2].vertices[1](1) = -TABLE_UNIT * 2;
+
+		cushions[3].vertices[0](0) = TABLE_UNIT;
+		cushions[3].vertices[0](1) = -TABLE_UNIT * 2;
+		cushions[3].vertices[1](0) = -TABLE_UNIT;
+		cushions[3].vertices[1](1) = -TABLE_UNIT * 2;
+
+		cushions[4].vertices[1](0) = -TABLE_UNIT * 3;
+		cushions[4].vertices[1](1) = 0;
+		cushions[4].vertices[0](0) = -TABLE_UNIT * 3;
+		cushions[4].vertices[0](1) = -TABLE_UNIT * 4;
+
+		cushions[5].vertices[0](0) = -TABLE_UNIT * 3;
+		cushions[5].vertices[0](1) = 0;
+		cushions[5].vertices[1](0) = -TABLE_UNIT;
+		cushions[5].vertices[1](1) = 0;
+
+		cushions[6].vertices[0](0) = -TABLE_UNIT;
+		cushions[6].vertices[0](1) = -TABLE_UNIT * 4;
+		cushions[6].vertices[1](0) = -TABLE_UNIT*3;
+		cushions[6].vertices[1](1) = -TABLE_UNIT * 4;
+
+		cushions[7].vertices[1](0) = -TABLE_UNIT;
+		cushions[7].vertices[1](1) = -TABLE_UNIT * 4;
+		cushions[7].vertices[0](0) = -TABLE_UNIT;
+		cushions[7].vertices[0](1) = -TABLE_UNIT * 2;
 	}
 
 	for(int i=0;i<NUM_CUSHIONS;i++)
