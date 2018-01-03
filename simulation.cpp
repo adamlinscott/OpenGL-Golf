@@ -228,9 +228,17 @@ void ball::HitBall(ball &b)
 
 void ball::HitHole(const hole &h)
 {
-	isInPlay = false;
-	velocity = { 0,0 };
-	position(0) = 10000;
+	if (h.isTarget)
+	{
+		isInPlay = false;
+		velocity = { 0,0 };
+		position(0) = 10000;
+	}
+	else
+	{
+		Reset();
+		score++;
+	}
 }
 
 /*-----------------------------------------------------------
@@ -376,6 +384,18 @@ void table::SetupCushions(void)
 	}
 	srand(time(NULL));
 
+	holeNo = 1;
+
+	for (int i = 1; i<NUM_HOLES; i++)
+	{
+		holes[i].isTarget = false;
+	}
+
+	for (int i = 1; i<NUM_BALLS; i++)
+	{
+		balls[i].score = 0;
+	}
+
 	ResetTable();
 }
 
@@ -385,14 +405,72 @@ void table::ResetTable(void)
 	double x = rand();
 	double y = rand();
 
-	tHole.centre = { ((x / (RAND_MAX)) * (TABLE_UNIT - tHole.radius) * 2) - (TABLE_UNIT - tHole.radius), ((y / (RAND_MAX)) * (TABLE_UNIT - tHole.radius) * 2) - (TABLE_UNIT - tHole.radius) };
+	holes[0].centre = { ((x / (RAND_MAX)) * (TABLE_UNIT - balls[0].radius) * 2) - (TABLE_UNIT - balls[0].radius), ((y / (RAND_MAX)) * (TABLE_UNIT - balls[0].radius) * 2) - (TABLE_UNIT - balls[0].radius) };
 	
 	if(gMenu.menuSelection == 1)
-		tHole.centre = { tHole.centre(0) , tHole.centre(1) - TABLE_UNIT };
+		holes[0].centre = { holes[0].centre(0) , holes[0].centre(1) - TABLE_UNIT };
 	if (gMenu.menuSelection == 2)
-		tHole.centre = { tHole.centre(0) - (TABLE_UNIT * 2), tHole.centre(1) - TABLE_UNIT };
+		holes[0].centre = { holes[0].centre(0) - (TABLE_UNIT * 2), holes[0].centre(1) - TABLE_UNIT };
 	if (gMenu.menuSelection == 3)
-		tHole.centre = { tHole.centre(0) - (TABLE_UNIT * 2) , tHole.centre(1) - (TABLE_UNIT*3) };
+		holes[0].centre = { holes[0].centre(0) - (TABLE_UNIT * 2) , holes[0].centre(1) - (TABLE_UNIT*3) };
+
+	if (holeNo < 4)
+	{
+		holes[1].centre = {TABLE_OB, TABLE_OB};
+		holes[2].centre = {TABLE_OB, TABLE_OB};
+	}
+	else if (holeNo < 7)
+	{
+		vec2 relPos = holes[1].centre - holes[0].centre;
+		double dist = sqrt(relPos(0)*relPos(0) + (relPos(1)*relPos(1)));
+		do
+		{
+			x = rand();
+			y = rand();
+			holes[1].centre = { ((x / (RAND_MAX)) * (TABLE_UNIT - balls[0].radius) * 2) - (TABLE_UNIT - balls[0].radius), ((y / (RAND_MAX)) * (TABLE_UNIT - balls[0].radius) * 2) - (TABLE_UNIT - balls[0].radius) };
+			holes[1].centre = { holes[1].centre(0) , holes[1].centre(1) - TABLE_UNIT };
+
+			relPos = holes[1].centre - holes[0].centre;
+			dist = sqrt(relPos(0)*relPos(0) + (relPos(1)*relPos(1)));
+		} while (dist < balls[0].radius * 2);
+
+		holes[2].centre = { TABLE_OB, TABLE_OB };
+	}
+	else
+	{
+
+		vec2 relPos = holes[1].centre - holes[0].centre;
+		double dist = sqrt(relPos(0)*relPos(0) + (relPos(1)*relPos(1)));
+		do
+		{
+			x = rand();
+			y = rand();
+			holes[1].centre = { ((x / (RAND_MAX)) * (TABLE_UNIT - balls[0].radius) * 2) - (TABLE_UNIT - balls[0].radius), ((y / (RAND_MAX)) * (TABLE_UNIT - balls[0].radius) * 2) - (TABLE_UNIT - balls[0].radius) };
+			holes[1].centre = { holes[1].centre(0) , holes[1].centre(1) - TABLE_UNIT };
+
+			relPos = holes[1].centre - holes[0].centre;
+			dist = sqrt(relPos(0)*relPos(0) + (relPos(1)*relPos(1)));
+		} while (dist < balls[0].radius * 2);
+
+
+		double dist1 = sqrt(relPos(0)*relPos(0) + (relPos(1)*relPos(1)));
+		do
+		{
+			x = rand();
+			y = rand();
+			holes[2].centre = { ((x / (RAND_MAX)) * (TABLE_UNIT - balls[0].radius) * 2) - (TABLE_UNIT - balls[0].radius), ((y / (RAND_MAX)) * (TABLE_UNIT - balls[0].radius) * 2) - (TABLE_UNIT - balls[0].radius) };
+
+			if (gMenu.menuSelection == 1)
+				holes[2].centre = { holes[2].centre(0) , holes[2].centre(1) - TABLE_UNIT };
+			else
+				holes[2].centre = { holes[2].centre(0) - (TABLE_UNIT * 2), holes[2].centre(1) - TABLE_UNIT };
+
+			relPos = holes[2].centre - holes[0].centre;
+			dist = sqrt(relPos(0)*relPos(0) + (relPos(1)*relPos(1)));
+			relPos = holes[2].centre - holes[1].centre;
+			dist1 = sqrt(relPos(0)*relPos(0) + (relPos(1)*relPos(1)));
+		} while (dist < balls[0].radius * 2 && dist1 < balls[0].radius * 2);
+	}
 
 	for (int i = 0; i < NUM_BALLS; i++)
 		balls[i].Reset();
@@ -413,7 +491,10 @@ void table::Update(int ms)
 			balls[i].DoBallCollision(balls[j]);
 		}
 
-		balls[i].DoHoleCollision(tHole);
+		for (int j = 0; j<NUM_HOLES; j++)
+		{
+			balls[i].DoHoleCollision(holes[j]);
+		}
 	}
 	
 	//update all balls

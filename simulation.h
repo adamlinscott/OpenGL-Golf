@@ -17,6 +17,7 @@
 #define TWO_PI			(6.2832f)
 #define	SIM_UPDATE_MS	(10)
 #define NUM_BALLS		(2)		
+#define NUM_HOLES		(3)		
 #define NUM_CUSHIONS	(8)		
 
 /*-----------------------------------------------------------
@@ -54,6 +55,7 @@ class hole
 public:
 	vec2	centre;
 	float	radius = 1;
+	bool	isTarget = true;
 };
 
 /*-----------------------------------------------------------
@@ -104,8 +106,9 @@ public:
 	void SetupCushions(void);
 	void Update(int ms);	
 	bool AnyBallsMoving(void) const;
-	hole tHole;
+	hole holes[NUM_HOLES];
 	void ResetTable(void);
+	int holeNo = 1;
 };
 
 /*-----------------------------------------------------------

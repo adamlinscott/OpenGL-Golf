@@ -194,15 +194,22 @@ void RenderScene(void) {
 		}
 
 		//Draw hole
+		for (int j = 0; j < NUM_HOLES; j++)
+		{
+			if(!gTable.holes[j].isTarget)
+				glColor3f(1.0, 0.2, 0);
 
-		glBegin(GL_LINE_LOOP);
-		for (int i = 0; i <= 300; i++) {
-			double angle = 2 * M_PI * i / 300;
-			double x = cos(angle)*0.1 * gTable.tHole.radius + gTable.tHole.centre(0);
-			double y = sin(angle)*0.1 * gTable.tHole.radius + gTable.tHole.centre(1);
-			glVertex3d(x, 0, y);
+			glBegin(GL_LINE_LOOP);
+			for (int i = 0; i <= 300; i++) {
+				double angle = 2 * M_PI * i / 300;
+				double x = cos(angle)*0.08 * gTable.holes[j].radius + gTable.holes[j].centre(0);
+				double y = sin(angle)*0.08 * gTable.holes[j].radius + gTable.holes[j].centre(1);
+				glVertex3d(x, 0, y);
+			}
+			glEnd();
+
+			glColor3f(1.0, 1.0, 1.0);
 		}
-		glEnd();
 
 		/*
 		glBegin(GL_LINE_LOOP);
@@ -255,6 +262,9 @@ void RenderScene(void) {
 		sprintf_s(buffer, "%d", gTable.balls[1].score);
 		drawBitmapText(buffer, -0.8, 0.7, 0);
 		glColor3f(1.0, 1.0, 1.0);
+
+		sprintf_s(buffer, "Hole #%d", gTable.holeNo);
+		drawBitmapText(buffer, 0, 0.7, 0);
 
 		//glPopMatrix();
 	}
@@ -347,7 +357,12 @@ void KeyboardFunc(unsigned char key, int x, int y)
 			}
 
 			if (!gTable.balls[0].isInPlay && !gTable.balls[1].isInPlay)
+			{
+				gTable.holeNo++;
+				if (gTable.holeNo > 9)
+					gMenu.drawMenu = true;
 				gTable.ResetTable();
+			}
 			break;
 		}
 	case(27):
