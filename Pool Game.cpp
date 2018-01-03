@@ -499,6 +499,17 @@ void UpdateScene(int ms)
 	if(gTable.AnyBallsMoving()==false) gDoCue = true;
 	else gDoCue = false;
 
+
+	if (player == 0) {
+		if (!gTable.balls[0].isInPlay)
+			player = 1;
+	}
+	else
+	{
+		if (!gTable.balls[1].isInPlay)
+			player = 0;
+	}
+
 	if(gDoCue)
 	{
 		if(gCueControl[0]) gCueAngle -= ((gCueAngleSpeed * ms)/1000);
