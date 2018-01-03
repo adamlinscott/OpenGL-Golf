@@ -385,8 +385,14 @@ void table::ResetTable(void)
 	double x = rand();
 	double y = rand();
 
-	tHole.centre = { ((x / (RAND_MAX)) - 0.5) * ((TABLE_X-0.1) * 2), ((y / (RAND_MAX)) - 0.6) * ((TABLE_Z-0.2) * 2) };
-
+	tHole.centre = { ((x / (RAND_MAX)) * (TABLE_UNIT - tHole.radius) * 2) - (TABLE_UNIT - tHole.radius), ((y / (RAND_MAX)) * (TABLE_UNIT - tHole.radius) * 2) - (TABLE_UNIT - tHole.radius) };
+	
+	if(gMenu.menuSelection == 1)
+		tHole.centre = { tHole.centre(0) , tHole.centre(1) - TABLE_UNIT };
+	if (gMenu.menuSelection == 2)
+		tHole.centre = { tHole.centre(0) - (TABLE_UNIT * 2), tHole.centre(1) - TABLE_UNIT };
+	if (gMenu.menuSelection == 3)
+		tHole.centre = { tHole.centre(0) - (TABLE_UNIT * 2) , tHole.centre(1) - (TABLE_UNIT*3) };
 
 	for (int i = 0; i < NUM_BALLS; i++)
 		balls[i].Reset();
