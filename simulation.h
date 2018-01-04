@@ -97,9 +97,9 @@ public:
 };
 
 /*-----------------------------------------------------------
-  table class
+  course class
   -----------------------------------------------------------*/
-class table
+class course
 {
 public:
 	ball balls[NUM_BALLS];	
@@ -115,7 +115,7 @@ public:
 /*-----------------------------------------------------------
   global table
   -----------------------------------------------------------*/
-extern table gTable;
+extern course gCourse;
 
 
 
@@ -132,6 +132,7 @@ public:
 	time_t menuUpdateTimer = 0;
 	time_t lastTimeCheck;
 	bool drawMenu = true;
+	bool drawScores = false;
 
 	time_t getDeltaTime()
 	{

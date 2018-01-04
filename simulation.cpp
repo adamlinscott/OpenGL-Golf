@@ -21,7 +21,7 @@ vec2	gPlaneNormal_Right(-1.0,0.0);
 vec2	gPlaneNormal_Bottom(0.0,-1.0);
 */
 
-table gTable;
+course gCourse;
 menu gMenu;
 
 static const float gRackPositionX[] = {0.0f,0.0f,(BALL_RADIUS*2.0f),(-BALL_RADIUS*2.0f),(BALL_RADIUS*4.0f)}; 
@@ -240,7 +240,7 @@ void ball::HitHole(const hole &h)
 /*-----------------------------------------------------------
   table class members
   -----------------------------------------------------------*/
-void table::SetupCushions(void)
+void course::SetupCushions(void)
 {
 	printf_s("%d", gMenu.menuSelection);
 	if (gMenu.menuSelection == 1) 
@@ -396,7 +396,7 @@ void table::SetupCushions(void)
 }
 
 
-void table::ResetTable(void)
+void course::ResetTable(void)
 {
 	double x = rand();
 	double y = rand();
@@ -472,7 +472,7 @@ void table::ResetTable(void)
 		balls[i].Reset();
 }
 
-void table::Update(int ms)
+void course::Update(int ms)
 {
 	//check for collisions for each ball
 	for(int i=0;i<NUM_BALLS;i++) 
@@ -497,7 +497,7 @@ void table::Update(int ms)
 	for(int i=0;i<NUM_BALLS;i++) balls[i].Update(ms);
 }
 
-bool table::AnyBallsMoving(void) const
+bool course::AnyBallsMoving(void) const
 {
 	//return true if any ball has a non-zero velocity
 	for(int i=0;i<NUM_BALLS;i++) 

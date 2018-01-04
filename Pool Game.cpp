@@ -147,30 +147,50 @@ void RenderScene(void) {
 
 	//set camera
 	glLoadIdentity();
-	gluLookAt(gCamPos(0), gCamPos(1), gCamPos(2), gCamLookAt(0), gCamLookAt(1), gCamLookAt(2), 0.0f, 1.0f, 0.0f);
 	
-	if (gMenu.drawMenu)
+	if (gMenu.drawMenu || gMenu.drawScores)
 	{
-		if(gMenu.menuSelection == 1) glColor3f(1.0, 0, 0);
-		drawBitmapText("Course #1", -1, 0, 0);
-		glColor3f(1.0, 1.0, 1.0);
+		gCamPos = {0.0, 0.7, 2.1};
+		gCamLookAt = { 0.0, 0.0, 0.0 };
+		gluLookAt(0, 0, 2.1, gCamLookAt(0), gCamLookAt(1), gCamLookAt(2), 0.0f, 1.0f, 0.0f);
 
-		if (gMenu.menuSelection == 2) glColor3f(1.0, 0, 0);
-		drawBitmapText("Course #2", -0.2, 0, 0);
-		glColor3f(1.0, 1.0, 1.0);
+		if (gMenu.drawMenu) 
+		{
+			if(gMenu.menuSelection == 1) glColor3f(1.0, 0, 0);
+			drawBitmapText("Course #1", -1, 0, 0);
+			glColor3f(1.0, 1.0, 1.0);
 
-		if (gMenu.menuSelection == 3) glColor3f(1.0, 0, 0);
-		drawBitmapText("Course #3", 0.6, 0, 0);
-		glColor3f(1.0, 1.0, 1.0);
+			if (gMenu.menuSelection == 2) glColor3f(1.0, 0, 0);
+			drawBitmapText("Course #2", -0.2, 0, 0);
+			glColor3f(1.0, 1.0, 1.0);
+
+			if (gMenu.menuSelection == 3) glColor3f(1.0, 0, 0);
+			drawBitmapText("Course #3", 0.6, 0, 0);
+			glColor3f(1.0, 1.0, 1.0);
+		} 
+		else
+		{
+			for (int i = 0; i < NUM_BALLS; i++)
+			{
+				char buffer[33];
+				sprintf_s(buffer, "Player %d", i+1);
+				drawBitmapText(buffer, -0.5, 0.7 - (0.2*i), 0);
+				
+				sprintf_s(buffer, "%d", gCourse.balls[i].score);
+				drawBitmapText(buffer, 0.5, 0.7 - (0.2*i), 0);
+			}
+		}
 	}
 	else 
 	{
+		gluLookAt(gCamPos(0), gCamPos(1), gCamPos(2), gCamLookAt(0), gCamLookAt(1), gCamLookAt(2), 0.0f, 1.0f, 0.0f);
+
 		//draw the ball
 		glColor3f(1.0, 1.0, 1.0);
 		for (int i = 0; i < NUM_BALLS; i++)
 		{
 			glPushMatrix();
-			glTranslatef(gTable.balls[i].position(0), (BALL_RADIUS / 2.0), gTable.balls[i].position(1));
+			glTranslatef(gCourse.balls[i].position(0), (BALL_RADIUS / 2.0), gCourse.balls[i].position(1));
 
 			int rat = i / 3 + 1;
 			if (i % 3 == 0) {
@@ -188,7 +208,7 @@ void RenderScene(void) {
 #if DRAW_SOLID
 			glutSolidSphere(gTable.balls[i].radius, 32, 32);
 #else
-			glutWireSphere(gTable.balls[i].radius, 12, 12);
+			glutWireSphere(gCourse.balls[i].radius, 12, 12);
 #endif
 			glPopMatrix();
 			glColor3f(0.0, 0.0, 1.0);
@@ -199,24 +219,24 @@ void RenderScene(void) {
 		for (int i = 0; i < NUM_CUSHIONS; i++)
 		{
 			glBegin(GL_LINE_LOOP);
-			glVertex3f(gTable.cushions[i].vertices[0](0), 0.0, gTable.cushions[i].vertices[0](1));
-			glVertex3f(gTable.cushions[i].vertices[0](0), 0.1, gTable.cushions[i].vertices[0](1));
-			glVertex3f(gTable.cushions[i].vertices[1](0), 0.1, gTable.cushions[i].vertices[1](1));
-			glVertex3f(gTable.cushions[i].vertices[1](0), 0.0, gTable.cushions[i].vertices[1](1));
+			glVertex3f(gCourse.cushions[i].vertices[0](0), 0.0, gCourse.cushions[i].vertices[0](1));
+			glVertex3f(gCourse.cushions[i].vertices[0](0), 0.1, gCourse.cushions[i].vertices[0](1));
+			glVertex3f(gCourse.cushions[i].vertices[1](0), 0.1, gCourse.cushions[i].vertices[1](1));
+			glVertex3f(gCourse.cushions[i].vertices[1](0), 0.0, gCourse.cushions[i].vertices[1](1));
 			glEnd();
 		}
 
 		//Draw hole
 		for (int j = 0; j < NUM_HOLES; j++)
 		{
-			if(!gTable.holes[j].isTarget)
+			if(!gCourse.holes[j].isTarget)
 				glColor3f(1.0, 0.2, 0);
 
 			glBegin(GL_LINE_LOOP);
 			for (int i = 0; i <= 300; i++) {
 				double angle = 2 * M_PI * i / 300;
-				double x = cos(angle)*0.08 * gTable.holes[j].radius + gTable.holes[j].centre(0);
-				double y = sin(angle)*0.08 * gTable.holes[j].radius + gTable.holes[j].centre(1);
+				double x = cos(angle)*0.08 * gCourse.holes[j].radius + gCourse.holes[j].centre(0);
+				double y = sin(angle)*0.08 * gCourse.holes[j].radius + gCourse.holes[j].centre(1);
 				glVertex3d(x, 0, y);
 			}
 			glEnd();
@@ -243,8 +263,8 @@ void RenderScene(void) {
 			{
 				glColor3f(0.0, 1.0/rat, 0.0);
 			}
-			glVertex3f(gTable.balls[player].position(0), (BALL_RADIUS / 2.0f), gTable.balls[player].position(1));
-			glVertex3f((gTable.balls[player].position(0) + cuex), (BALL_RADIUS / 2.0f), (gTable.balls[player].position(1) + cuez));
+			glVertex3f(gCourse.balls[player].position(0), (BALL_RADIUS / 2.0f), gCourse.balls[player].position(1));
+			glVertex3f((gCourse.balls[player].position(0) + cuex), (BALL_RADIUS / 2.0f), (gCourse.balls[player].position(1) + cuez));
 			glColor3f(1.0, 1.0, 1.0);
 			glEnd();
 		}
@@ -252,18 +272,16 @@ void RenderScene(void) {
 		//Draw Scores Text
 		char buffer[33];
 
-		sprintf_s(buffer, "Hole #%d", gTable.holeNo);
+		sprintf_s(buffer, "Hole #%d", gCourse.holeNo);
 		drawBitmapText(buffer, -0.8, 0.7, 0);
 
 		//glColor3f(1.0, 0, 0);
-		sprintf_s(buffer, "Player %d: %d", player + 1, gTable.balls[player].score);
+		sprintf_s(buffer, "Player %d: %d", player + 1, gCourse.balls[player].score);
 		drawBitmapText(buffer, 0.8, 0.7, 0);
-		sprintf_s(buffer, "Player %d: %d", (player + 1)%(NUM_BALLS) + 1, gTable.balls[(player+1)%NUM_BALLS].score);
-		drawBitmapText(buffer, 0.8, 0.6, 0);
+		sprintf_s(buffer, "Player %d: %d", (player + 1)%(NUM_BALLS) + 1, gCourse.balls[(player+1)%NUM_BALLS].score);
+//		drawBitmapText(buffer, 0.8, 0.6, 0);
 
 		glColor3f(1.0, 1.0, 1.0);
-
-
 		//glPopMatrix();
 	}
 
@@ -334,30 +352,37 @@ void KeyboardFunc(unsigned char key, int x, int y)
 			if (gMenu.drawMenu)
 			{
 				gMenu.drawMenu = false;
-				gTable.SetupCushions();
+				gCourse.SetupCushions();
+				break;
+			}
+
+			if (gMenu.drawScores)
+			{
+				gMenu.drawScores = false;
+				gMenu.drawMenu = true;
 				break;
 			}
 			if(gDoCue)
 			{
-				gTable.balls[player].score++;
-				gTable.balls[player].isGhost = false;
+				gCourse.balls[player].score++;
+				gCourse.balls[player].isGhost = false;
 				vec2 imp(	(-sin(gCueAngle) * gCuePower * gCueBallFactor),
 							(-cos(gCueAngle) * gCuePower * gCueBallFactor));
-				gTable.balls[player].ApplyImpulse(imp);
+				gCourse.balls[player].ApplyImpulse(imp);
 				player++;
 			}
 
 			bool isAnyballInPlay = false;
 			for (int i = 0; i < NUM_BALLS; i++)
-				if (gTable.balls[i].isInPlay)
+				if (gCourse.balls[i].isInPlay)
 					isAnyballInPlay = true;
 
 			if (!isAnyballInPlay)
 			{
-				gTable.holeNo++;
-				if (gTable.holeNo > 9)
-					gMenu.drawMenu = true;
-				gTable.ResetTable();
+				gCourse.holeNo++;
+				if (gCourse.holeNo > 9)
+					gMenu.drawScores = true;
+				gCourse.ResetTable();
 			}
 			break;
 		}
@@ -365,7 +390,7 @@ void KeyboardFunc(unsigned char key, int x, int y)
 		{
 			for(int i=0;i<NUM_BALLS;i++)
 			{
-				gTable.balls[i].Reset();
+				gCourse.balls[i].Reset();
 			}
 			break;
 		}
@@ -492,16 +517,16 @@ void InitLights(void)
 }
 void UpdateScene(int ms) 
 {
-	if(gTable.AnyBallsMoving()==false) gDoCue = true;
+	if(gCourse.AnyBallsMoving()==false) gDoCue = true;
 	else gDoCue = false;
 
 
 	bool isAnyballInPlay = false;
 	for (int i = 0; i < NUM_BALLS; i++)
-		if (gTable.balls[i].isInPlay)
+		if (gCourse.balls[i].isInPlay)
 			isAnyballInPlay = true;
 
-	if (!gTable.balls[player].isInPlay && isAnyballInPlay)
+	if (!gCourse.balls[player].isInPlay && isAnyballInPlay)
 	{
 		player++;
 		if (player >= NUM_BALLS)
@@ -543,7 +568,7 @@ void UpdateScene(int ms)
 
 	DoCamera(ms);
 
-	gTable.Update(ms);
+	gCourse.Update(ms);
 
 	glutTimerFunc(SIM_UPDATE_MS, UpdateScene, SIM_UPDATE_MS);
 	glutPostRedisplay();
@@ -551,7 +576,7 @@ void UpdateScene(int ms)
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	gTable.SetupCushions();
+	gCourse.SetupCushions();
 
 	gMenu.lastTimeCheck = clock();
 
