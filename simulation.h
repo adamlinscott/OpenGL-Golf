@@ -12,6 +12,7 @@
 #define TABLE_UNIT		(0.6f)
 #define TABLE_Y			(0.1f)
 #define TABLE_OB		(100.0f)
+#define HOLE_RADIUS		(0.075f)
 #define BALL_RADIUS		(0.05f)
 #define BALL_MASS		(0.1f)
 #define TWO_PI			(6.2832f)
@@ -56,7 +57,7 @@ public:
 	vec2	centre;
 	float	radius;
 	bool	isTarget = true;
-	hole() : radius(BALL_RADIUS) {}
+	hole() : radius(HOLE_RADIUS) {}
 };
 
 /*-----------------------------------------------------------

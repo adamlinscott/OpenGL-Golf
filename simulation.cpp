@@ -381,12 +381,12 @@ void course::SetupCushions(void)
 	srand(time(NULL));
 
 	holeNo = 1;
-	holes[0].radius = BALL_RADIUS*1.5;
+	holes[0].radius = HOLE_RADIUS;
 
 	for (int i = 1; i<NUM_HOLES; i++)
 	{
 		holes[i].isTarget = false;
-		holes[i].radius = BALL_RADIUS*1.5;
+		holes[i].radius = HOLE_RADIUS;
 	}
 
 	for (int i = 1; i<NUM_BALLS; i++)
@@ -403,7 +403,7 @@ void course::ResetTable(void)
 	double x = rand();
 	double y = rand();
 
-	holes[0].centre = { ((x / (RAND_MAX)) * (TABLE_UNIT - balls[0].radius) * 2) - (TABLE_UNIT - balls[0].radius), ((y / (RAND_MAX)) * (TABLE_UNIT - balls[0].radius) * 2) - (TABLE_UNIT - balls[0].radius) };
+	holes[0].centre = { ((x / (RAND_MAX)) * (TABLE_UNIT - HOLE_RADIUS) * 2) - (TABLE_UNIT - HOLE_RADIUS), ((y / (RAND_MAX)) * (TABLE_UNIT - HOLE_RADIUS) * 2) - (TABLE_UNIT - HOLE_RADIUS) };
 	
 	if(gMenu.menuSelection == 1)
 		holes[0].centre = { holes[0].centre(0) , holes[0].centre(1) - TABLE_UNIT };
@@ -425,12 +425,12 @@ void course::ResetTable(void)
 		{
 			x = rand();
 			y = rand();
-			holes[1].centre = { ((x / (RAND_MAX)) * (TABLE_UNIT - balls[0].radius) * 2) - (TABLE_UNIT - balls[0].radius), ((y / (RAND_MAX)) * (TABLE_UNIT - balls[0].radius) * 2) - (TABLE_UNIT - balls[0].radius) };
+			holes[1].centre = { ((x / (RAND_MAX)) * (TABLE_UNIT - HOLE_RADIUS) * 2) - (TABLE_UNIT - HOLE_RADIUS), ((y / (RAND_MAX)) * (TABLE_UNIT - HOLE_RADIUS) * 2) - (TABLE_UNIT - HOLE_RADIUS) };
 			holes[1].centre = { holes[1].centre(0) , holes[1].centre(1) - TABLE_UNIT };
 
 			relPos = holes[1].centre - holes[0].centre;
 			dist = sqrt(relPos(0)*relPos(0) + (relPos(1)*relPos(1)));
-		} while (dist < balls[0].radius * 2);
+		} while (dist < HOLE_RADIUS * 2);
 
 		holes[2].centre = { TABLE_OB, TABLE_OB };
 	}
@@ -443,12 +443,12 @@ void course::ResetTable(void)
 		{
 			x = rand();
 			y = rand();
-			holes[1].centre = { ((x / (RAND_MAX)) * (TABLE_UNIT - balls[0].radius) * 2) - (TABLE_UNIT - balls[0].radius), ((y / (RAND_MAX)) * (TABLE_UNIT - balls[0].radius) * 2) - (TABLE_UNIT - balls[0].radius) };
+			holes[1].centre = { ((x / (RAND_MAX)) * (TABLE_UNIT - HOLE_RADIUS) * 2) - (TABLE_UNIT - HOLE_RADIUS), ((y / (RAND_MAX)) * (TABLE_UNIT - HOLE_RADIUS) * 2) - (TABLE_UNIT - HOLE_RADIUS) };
 			holes[1].centre = { holes[1].centre(0) , holes[1].centre(1) - TABLE_UNIT };
 
 			relPos = holes[1].centre - holes[0].centre;
 			dist = sqrt(relPos(0)*relPos(0) + (relPos(1)*relPos(1)));
-		} while (dist < balls[0].radius * 2);
+		} while (dist < HOLE_RADIUS * 2);
 
 
 		double dist1 = sqrt(relPos(0)*relPos(0) + (relPos(1)*relPos(1)));
@@ -456,7 +456,7 @@ void course::ResetTable(void)
 		{
 			x = rand();
 			y = rand();
-			holes[2].centre = { ((x / (RAND_MAX)) * (TABLE_UNIT - balls[0].radius) * 2) - (TABLE_UNIT - balls[0].radius), ((y / (RAND_MAX)) * (TABLE_UNIT - balls[0].radius) * 2) - (TABLE_UNIT - balls[0].radius) };
+			holes[2].centre = { ((x / (RAND_MAX)) * (TABLE_UNIT - HOLE_RADIUS) * 2) - (TABLE_UNIT - HOLE_RADIUS), ((y / (RAND_MAX)) * (TABLE_UNIT - HOLE_RADIUS) * 2) - (TABLE_UNIT - HOLE_RADIUS) };
 
 			if (gMenu.menuSelection == 1)
 				holes[2].centre = { holes[2].centre(0) , holes[2].centre(1) - TABLE_UNIT };
@@ -467,7 +467,7 @@ void course::ResetTable(void)
 			dist = sqrt(relPos(0)*relPos(0) + (relPos(1)*relPos(1)));
 			relPos = holes[2].centre - holes[1].centre;
 			dist1 = sqrt(relPos(0)*relPos(0) + (relPos(1)*relPos(1)));
-		} while (dist < balls[0].radius * 2 && dist1 < balls[0].radius * 2);
+		} while (dist < HOLE_RADIUS * 2 && dist1 < HOLE_RADIUS * 2);
 	}
 
 	for (int i = 0; i < NUM_BALLS; i++)
