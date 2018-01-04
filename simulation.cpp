@@ -171,7 +171,7 @@ bool ball::HasHitHole(const hole &h) const
 	//if in front of plane, then have not hit
 	vec2 relPos = position - h.centre;
 	double dist = sqrt(relPos(0)*relPos(0) + (relPos(1)*relPos(1)));
-	if (dist > radius) return false;
+	if (dist > h.radius) return false;
 	return true;
 }
 
@@ -381,10 +381,12 @@ void course::SetupCushions(void)
 	srand(time(NULL));
 
 	holeNo = 1;
+	holes[0].radius = BALL_RADIUS*1.5;
 
 	for (int i = 1; i<NUM_HOLES; i++)
 	{
 		holes[i].isTarget = false;
+		holes[i].radius = BALL_RADIUS*1.5;
 	}
 
 	for (int i = 1; i<NUM_BALLS; i++)

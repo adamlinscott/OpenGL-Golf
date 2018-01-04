@@ -42,9 +42,9 @@ public:
 	vec2	normal;
 	int		length;
 
-	void MakeNormal(void);
-	void MakeCentre(void);
-	void MakeLength(void);
+	void	MakeNormal(void);
+	void	MakeCentre(void);
+	void	MakeLength(void);
 };
 
 /*-----------------------------------------------------------
@@ -54,8 +54,9 @@ class hole
 {
 public:
 	vec2	centre;
-	float	radius = 1;
+	float	radius;
 	bool	isTarget = true;
+	hole() : radius(BALL_RADIUS) {}
 };
 
 /*-----------------------------------------------------------
@@ -71,29 +72,29 @@ public:
 	float	radius;
 	float	mass;
 	int		index;
-	int score = 0;
-	bool isInPlay = true;
+	int		score = 0;
+	bool	isInPlay = true;
+	bool	isGhost = true;
 
 	ball(): position(0.0), velocity(0.0), radius(BALL_RADIUS), 
 		mass(BALL_MASS) {index = ballIndexCnt++; Reset();}
 	
-	void Reset(void);
-	void ApplyImpulse(vec2 imp);
-	void ApplyFrictionForce(int ms);
-	void Update(int ms);
-	void DoPlaneCollision(const cushion &c);
-	void DoBallCollision(ball &b);
-	void DoHoleCollision(const hole &h);
+	void	Reset(void);
+	void	ApplyImpulse(vec2 imp);
+	void	ApplyFrictionForce(int ms);
+	void	Update(int ms);
+
+	void	DoPlaneCollision(const cushion &c);
+	void	DoBallCollision(ball &b);
+	void	DoHoleCollision(const hole &h);
 	
-	bool HasHitPlane(const cushion &c) const;
-	bool HasHitBall(const ball &b) const;
-	bool HasHitHole(const hole &h) const;
+	bool	HasHitPlane(const cushion &c) const;
+	bool	HasHitBall(const ball &b) const;
+	bool	HasHitHole(const hole &h) const;
 
-	void HitPlane(const cushion &c);
-	void HitBall(ball &b);
-	void HitHole(const hole &h);
-
-	bool	isGhost = true;
+	void	HitPlane(const cushion &c);
+	void	HitBall(ball &b);
+	void	HitHole(const hole &h);
 };
 
 /*-----------------------------------------------------------
@@ -102,14 +103,14 @@ public:
 class course
 {
 public:
-	ball balls[NUM_BALLS];	
-	cushion cushions[NUM_CUSHIONS];
-	void SetupCushions(void);
-	void Update(int ms);	
-	bool AnyBallsMoving(void) const;
-	hole holes[NUM_HOLES];
-	void ResetTable(void);
-	int holeNo = 1;
+	ball	balls[NUM_BALLS];	
+	cushion	cushions[NUM_CUSHIONS];
+	hole	holes[NUM_HOLES];
+	int		holeNo = 1;
+	void	SetupCushions(void);
+	void	ResetTable(void);
+	void	Update(int ms);	
+	bool	AnyBallsMoving(void) const;
 };
 
 /*-----------------------------------------------------------
@@ -134,7 +135,7 @@ public:
 	bool drawMenu = true;
 	bool drawScores = false;
 
-	time_t getDeltaTime()
+	time_t GetDeltaTime()
 	{
 		time_t diff = clock() - lastTimeCheck;
 		lastTimeCheck = clock();

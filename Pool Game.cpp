@@ -235,8 +235,8 @@ void RenderScene(void) {
 			glBegin(GL_LINE_LOOP);
 			for (int i = 0; i <= 300; i++) {
 				double angle = 2 * M_PI * i / 300;
-				double x = cos(angle)*0.08 * gCourse.holes[j].radius + gCourse.holes[j].centre(0);
-				double y = sin(angle)*0.08 * gCourse.holes[j].radius + gCourse.holes[j].centre(1);
+				double x = cos(angle) * gCourse.holes[j].radius + gCourse.holes[j].centre(0);
+				double y = sin(angle) * gCourse.holes[j].radius + gCourse.holes[j].centre(1);
 				glVertex3d(x, 0, y);
 			}
 			glEnd();
@@ -540,7 +540,7 @@ void UpdateScene(int ms)
 		if (gCueAngle <0.0) gCueAngle += TWO_PI;
 		if (gCueAngle >TWO_PI) gCueAngle -= TWO_PI;
 
-		gMenu.menuUpdateTimer += gMenu.getDeltaTime();
+		gMenu.menuUpdateTimer += gMenu.GetDeltaTime();
 
 		if (gCueControl[2])
 		{
