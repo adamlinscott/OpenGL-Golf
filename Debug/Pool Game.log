@@ -1,9 +1,9 @@
-﻿  simulation.cpp
-d:\desktop\opengl-pool\simulation.cpp(56): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-d:\desktop\opengl-pool\simulation.cpp(381): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+﻿  Pool Game.cpp
+d:\desktop\opengl-pool\pool game.cpp(510): warning C4838: conversion from 'double' to 'GLfloat' requires a narrowing conversion
   Generating Code...
   Compiling...
-  Pool Game.cpp
-d:\desktop\opengl-pool\pool game.cpp(510): warning C4838: conversion from 'double' to 'GLfloat' requires a narrowing conversion
+  simulation.cpp
+d:\desktop\opengl-pool\simulation.cpp(56): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+d:\desktop\opengl-pool\simulation.cpp(381): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   Generating Code...
   Pool Game.vcxproj -> D:\Desktop\OpenGL-Pool\Debug\Pool Game.exe
