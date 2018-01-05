@@ -131,6 +131,7 @@ bool ball::HasHitPlane(const cushion &c) const
 	//if in front of plane, then have not hit
 	vec2 relPos = position - c.vertices[0];
 	double sep = relPos.Dot(c.normal);
+
 	bool isTop = c.vertices[0](1) > c.vertices[1](1);
 	bool isLeft = c.vertices[0](0) > c.vertices[1](0);
 
