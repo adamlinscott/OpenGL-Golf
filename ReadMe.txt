@@ -1,3 +1,7 @@
+This is a game of golf made for an assignment which was built off of code that was given for us to build upon.
+Origional ReadMe.txt is below
+
+
 ========================================================================
     CONSOLE APPLICATION : Pool Game Project Overview
 ========================================================================
